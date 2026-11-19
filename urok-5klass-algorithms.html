@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Информатика 5 класс: Понятие алгоритма. Исполнители. СКИ</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #dbeafe;
+      --accent: #7c3aed;
+      --accent-light: #ede9fe;
+      --success: #059669;
+      --success-light: #d1fae5;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #cbd5e1;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 56px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+
+    .topbar-inner {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .topbar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .timer-box {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.35s ease;
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-top: 10px;
+      scrollbar-width: none;
+    }
+
+    .nav-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-pill {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .nav-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .nav-pill.done {
+      border-color: var(--success);
+      color: var(--success);
+      background: var(--success-light);
+    }
+
+    .nav-pill.active.done {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 20px auto 0;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(203, 213, 225, 0.75);
+    }
+
+    .module {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .module.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 1.55rem;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      color: var(--primary-dark);
+    }
+
+    h3 {
+      font-size: 1.08rem;
+      margin: 16px 0 8px;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    ul {
+      margin: 8px 0 14px 20px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .time-tag {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 3px 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .callout {
+      background: var(--surface-soft);
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 14px 0;
+    }
+
+    .callout.warn {
+      border-left-color: var(--warning);
+      background: var(--warning-light);
+    }
+
+    .callout.success {
+      border-left-color: var(--success);
+      background: var(--success-light);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .info-box {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .info-box strong {
+      display: block;
+      font-size: 1.02rem;
+      margin-bottom: 6px;
+      color: var(--primary-dark);
+    }
+
+    .interactive-zone {
+      background: #f8fafc;
+      border: 2px dashed #93c5fd;
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .interactive-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-success {
+      background: var(--success);
+    }
+
+    .btn-success:hover {
+      background: #047857;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    .btn-sm {
+      padding: 7px 14px;
+      font-size: 0.86rem;
+      border-radius: 8px;
+    }
+
+    .nav-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      margin: 8px 0 12px;
+    }
+
+    /* Карточки сортировки и выбора */
+    .sort-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .sort-item-text {
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .sort-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .choice-btn {
+      background: var(--surface-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .choice-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .choice-btn.selected {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .choice-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .choice-btn.wrong {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    /* Конструктор порядка шагов (Модуль 1) */
+    .order-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .order-chip {
+      background: var(--surface);
+      border: 1px solid var(--primary);
+      color: var(--primary-dark);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .order-chip:hover {
+      background: var(--primary-light);
+    }
+
+    .order-slot {
+      background: var(--surface);
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .order-slot.filled {
+      border-style: solid;
+      border-color: var(--primary);
+      color: var(--text);
+      background: #fff;
+    }
+
+    /* Симулятор Робота (Модуль 3) */
+    .robot-lab {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      align-items: start;
+      margin-top: 12px;
+    }
+
+    .svg-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .svg-box svg {
+      max-width: 280px;
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .cmd-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      max-width: 270px;
+      margin: 8px auto 12px;
+    }
+
+    .cmd-btn {
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      color: var(--primary-dark);
+      border-radius: 10px;
+      padding: 9px 6px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .cmd-btn:hover {
+      background: var(--primary-light);
+    }
+
+    .cmd-btn.action-cmd {
+      border-color: var(--accent);
+      color: var(--accent);
+      grid-column: span 3;
+    }
+
+    .cmd-btn.action-cmd:hover {
+      background: var(--accent-light);
+    }
+
+    .program-queue {
+      background: #0f172a;
+      color: #38bdf8;
+      font-family: "Courier New", Courier, monospace;
+      padding: 10px 12px;
+      border-radius: 10px;
+      min-height: 74px;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      word-break: break-word;
+    }
+
+    /* Исполнитель Вычислитель (Модуль 4) */
+    .calc-exec-display {
+      background: #0f172a;
+      color: #34d399;
+      font-family: "Courier New", Courier, monospace;
+      padding: 14px;
+      border-radius: 12px;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    /* Тест */
+    .quiz-q {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-opt {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      margin-top: 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.93rem;
+      transition: all 0.15s;
+    }
+
+    .quiz-opt:hover {
+      border-color: var(--primary);
+    }
+
+    .quiz-opt.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      font-weight: 600;
+    }
+
+    .quiz-opt.correct {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: #065f46;
+      font-weight: 700;
+    }
+
+    .quiz-opt.wrong {
+      border-color: var(--danger);
+      background: var(--danger-light);
+      color: #991b1b;
+    }
+
+    /* Сертификат */
+    .cert-box {
+      border: 3px solid var(--primary);
+      background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+      border-radius: 18px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .cert-grade {
+      display: inline-block;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--success);
+      background: var(--success-light);
+      padding: 8px 22px;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-weight: 600;
+      font-size: 0.93rem;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 16px; }
+      h1 { font-size: 1.32rem; }
+      h2 { font-size: 1.16rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-row">
+        <span class="badge">Информатика • 5 класс</span>
+        <span class="timer-box" id="timerDisplay">Время урока: 00:00 / 45:00</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+      <nav class="nav-pills" id="navPills">
+        <button class="nav-pill active" onclick="goToStep(0)">Старт</button>
+        <button class="nav-pill" onclick="goToStep(1)">1. Понятие алгоритма</button>
+        <button class="nav-pill" onclick="goToStep(2)">2. Исполнители</button>
+        <button class="nav-pill" onclick="goToStep(3)">3. СКИ и Робот</button>
+        <button class="nav-pill" onclick="goToStep(4)">4. Запись и Вычислитель</button>
+        <button class="nav-pill" onclick="goToStep(5)">5. Итоговый тест</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ШАГ 0: ВВЕДЕНИЕ -->
+    <section class="module active" id="step-0">
+      <div class="card">
+        <span class="time-tag">Самостоятельный урок • 45 минут</span>
+        <h1>Понятие алгоритма. Исполнители алгоритмов. Система команд исполнителя</h1>
+        <p>Каждый день мы действуем по правилам и инструкциям: переходим дорогу по светофору, готовим завтрак по рецепту, решаем задачи по формулам. В информатике такие точные инструкции называют <strong>алгоритмами</strong>.</p>
+        <p>На этом уроке ты узнаешь, чем настоящий алгоритм отличается от обычного совета, кто такие <strong>исполнители</strong> и как запрограммировать виртуального <strong>Робота</strong> и <strong>Вычислителя</strong>.</p>
+
+        <div class="callout">
+          <strong>План урока на 45 минут:</strong><br />
+          1. Изучить свойства алгоритма и собрать алгоритм из перемешанных шагов.<br />
+          2. Научиться различать формальных и неформальных исполнителей.<br />
+          3. Написать программу для Робота на клеточном поле, потренироваться на «Вычислителе» и пройти итоговый тест (8 вопросов).
+        </div>
+
+        <label for="studentNameInput"><strong>Введи фамилию, имя и класс перед началом:</strong></label>
+        <input type="text" id="studentNameInput" class="input-field" placeholder="Например: Тарасов Денис, 5-А" />
+
+        <div class="nav-footer">
+          <span></span>
+          <button class="btn" onclick="startLesson()">Начать урок →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 1: ПОНЯТИЕ АЛГОРИТМА -->
+    <section class="module" id="step-1">
+      <div class="card">
+        <span class="time-tag">Модуль 1 • Рекомендуемое время: 10 минут</span>
+        <h2>1. Что такое алгоритм и каковы его свойства?</h2>
+        <p><strong>Алгоритм</strong> — это конечная последовательность точных и понятных команд, выполнение которых приводит к решению поставленной задачи и получению нужного результата.</p>
+        <p>Слово «алгоритм» произошло от имени великого среднеазиатского учёного IX века <strong>Мухаммеда аль-Хорезми</strong>, который впервые описал правила выполнения арифметических действий в десятичной системе счисления.</p>
+
+        <h3>Четыре главных свойства любого алгоритма:</h3>
+        <div class="grid-2">
+          <div class="info-box">
+            <strong>1. Понятность</strong>
+            Алгоритм состоит только из тех команд, которые знает и умеет выполнять исполнитель.
+          </div>
+          <div class="info-box">
+            <strong>2. Точность (определённость)</strong>
+            Каждая команда понимается однозначно; не допускаются расплывчатые фразы вроде «добавь немного» или «сделай красиво».
+          </div>
+          <div class="info-box">
+            <strong>3. Конечность</strong>
+            Выполнение алгоритма должно завершаться за конечное число шагов, а не длиться бесконечно.
+          </div>
+          <div class="info-box">
+            <strong>4. Результативность</strong>
+            При точном выполнении всех команд обязательно получается конкретный результат (ответ, готовое изделие).
+          </div>
+        </div>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Задание 1.1: Алгоритм или нет?</div>
+          <p style="font-size: 0.92rem;">Проверь, какие из этих инструкций можно считать настоящим алгоритмом:</p>
+          <div id="m1SortContainer"></div>
+          <button class="btn btn-sm" onclick="checkM1Sort()">Проверить</button>
+          <div class="feedback" id="m1SortFeedback"></div>
+
+          <hr style="margin: 18px 0; border: none; border-top: 1px solid var(--border);" />
+
+          <div class="interactive-title">Задание 1.2: Собери алгоритм перехода улицы по светофору</div>
+          <p style="font-size: 0.92rem;">Нажимай на шаги в правильном порядке от 1-го до 4-го:</p>
+          <div class="order-pool" id="m1OrderPool"></div>
+          <div id="m1OrderSlots">
+            <div class="order-slot" id="m1-slot-0">Шаг 1: ...</div>
+            <div class="order-slot" id="m1-slot-1">Шаг 2: ...</div>
+            <div class="order-slot" id="m1-slot-2">Шаг 3: ...</div>
+            <div class="order-slot" id="m1-slot-3">Шаг 4: ...</div>
+          </div>
+          <div style="margin-top: 10px; display: flex; gap: 8px;">
+            <button class="btn btn-sm btn-secondary" onclick="resetM1Order()">Сбросить</button>
+            <button class="btn btn-sm" onclick="checkM1Order()">Проверить порядок</button>
+          </div>
+          <div class="feedback" id="m1OrderFeedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(0)">← Назад</button>
+          <button class="btn" onclick="goToStep(2)">Дальше: Исполнители алгоритмов →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 2: ИСПОЛНИТЕЛИ АЛГОРИТМОВ -->
+    <section class="module" id="step-2">
+      <div class="card">
+        <span class="time-tag">Модуль 2 • Рекомендуемое время: 9 минут</span>
+        <h2>2. Исполнители алгоритмов: формальные и неформальные</h2>
+        <p><strong>Исполнитель</strong> — это человек, животное или техническое устройство (робот, компьютер, станок, бытовой прибор), которое способно понимать и выполнять команды алгоритма.</p>
+        <p>У каждого исполнителя есть своя <strong>среда обитания</strong> — обстановка, в которой он работает (например, для шахматного робота это шахматная доска, для текстового редактора — страница текста).</p>
+
+        <div class="grid-2">
+          <div class="info-box">
+            <strong>Формальный исполнитель</strong>
+            Выполняет команды <strong>строго по программе</strong>, не задумываясь о смысле и цели действий. Одну и ту же команду он всегда выполняет абсолютно одинаково.<br />
+            <em>Примеры:</em> компьютер, робот-пылесос, стиральная машина, светофор, калькулятор.
+          </div>
+          <div class="info-box">
+            <strong>Неформальный исполнитель</strong>
+            Понимает смысл команд, может проявить смекалку, уточнить задание или отказаться его выполнять.<br />
+            <em>Примеры:</em> ученик, повар, водитель, дрессированная собака.
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Важно!</strong> Составляя алгоритм для <strong>формального исполнителя</strong> (компьютера или робота), нельзя надеяться на его «догадливость». Нужно прописать абсолютно каждый шаг без пропусков.
+        </div>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Тренажёр: Определи тип исполнителя</div>
+          <p style="font-size: 0.92rem;">Выбери для каждого исполнителя, формальный он или неформальный:</p>
+          <div id="m2Container"></div>
+          <button class="btn btn-sm" onclick="checkM2()">Проверить ответы</button>
+          <div class="feedback" id="m2Feedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(1)">← Назад</button>
+          <button class="btn" onclick="goToStep(3)">Дальше: Система команд исполнителя →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 3: СИСТЕМА КОМАНД ИСПОЛНИТЕЛЯ (СКИ) И РОБОТ -->
+    <section class="module" id="step-3">
+      <div class="card">
+        <span class="time-tag">Модуль 3 • Рекомендуемое время: 14 минут</span>
+        <h2>3. Система команд исполнителя (СКИ)</h2>
+        <p>Каждый исполнитель умеет выполнять только строго определённый набор действий. Все команды, которые исполнитель понимает и может выполнить, образуют <strong>систему команд исполнителя (СКИ)</strong>.</p>
+
+        <div class="callout warn">
+          <strong>Что произойдёт, если дать команду не из СКИ?</strong><br />
+          Если подать исполнителю команду, которой нет в его СКИ (например, сказать стиральной машине «Подмети пол» или подать команду, ведущую в стену), исполнитель сообщит об ошибке: <strong>«Не понимаю»</strong> или <strong>«Не могу выполнить»</strong>.
+        </div>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Практикум: Запрограммируй Робота-Сборщика</div>
+          <p style="font-size: 0.92rem;">Среда исполнителя — поле <strong>5×5 клеток</strong>. В <strong>СКИ Робота</strong> всего 5 команд: <code>ВВЕРХ</code>, <code>ВНИЗ</code>, <code>ВЛЕВО</code>, <code>ВПРАВО</code> (шаг на 1 клетку) и <code>ВЗЯТЬ</code> (собрать кристалл на текущей клетке).<br />
+          <strong>Задача:</strong> проведи Робота от старта, собери <strong>оба синих кристалла (💎)</strong> и остановись на <strong>зелёном финише (🏁)</strong>, не врезавшись в стены (🧱)!</p>
+
+          <div class="robot-lab">
+            <div class="svg-box" id="robotGridSvg"></div>
+
+            <div>
+              <div style="text-align: center; font-weight: 700; font-size: 0.9rem;">Пульт команд (СКИ Робота):</div>
+              <div class="cmd-pad">
+                <div></div>
+                <button class="cmd-btn" onclick="addRobotCmd('ВВЕРХ')">↑ ВВЕРХ</button>
+                <div></div>
+                <button class="cmd-btn" onclick="addRobotCmd('ВЛЕВО')">← ВЛЕВО</button>
+                <button class="cmd-btn" onclick="addRobotCmd('ВНИЗ')">↓ ВНИЗ</button>
+                <button class="cmd-btn" onclick="addRobotCmd('ВПРАВО')">ВПРАВО →</button>
+                <button class="cmd-btn action-cmd" onclick="addRobotCmd('ВЗЯТЬ')">💎 ВЗЯТЬ КРИСТАЛЛ</button>
+              </div>
+
+              <div style="font-weight: 700; font-size: 0.88rem; margin-bottom: 4px;">Твоя программа (<span id="cmdCount">0</span>/16 команд):</div>
+              <div class="program-queue" id="programQueueBox">Нажимай на кнопки пульта выше...</div>
+
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <button class="btn btn-sm btn-success" onclick="runRobotProgram()">▶ Запустить</button>
+                <button class="btn btn-sm btn-secondary" onclick="popRobotCmd()">⌫ Удалить</button>
+                <button class="btn btn-sm btn-secondary" onclick="resetRobotSim()">⟲ Сбросить всё</button>
+              </div>
+            </div>
+          </div>
+          <div class="feedback" id="robotFeedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(2)">← Назад</button>
+          <button class="btn" onclick="goToStep(4)">Дальше: Запись алгоритмов →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 4: СПОСОБЫ ЗАПИСИ АЛГОРИТМОВ И ВЫЧИСЛИТЕЛЬ -->
+    <section class="module" id="step-4">
+      <div class="card">
+        <span class="time-tag">Модуль 4 • Рекомендуемое время: 6 минут</span>
+        <h2>4. Способы записи алгоритмов и исполнитель «Вычислитель»</h2>
+        <p>Один и тот же алгоритм можно записать разными способами в зависимости от того, кто будет его читать:</p>
+
+        <div class="grid-3">
+          <div class="info-box">
+            <strong>1. Словесный</strong>
+            Запись на обычном языке в виде пронумерованного списка шагов (рецепт, инструкция к игре).
+          </div>
+          <div class="info-box">
+            <strong>2. Графический (блок-схема)</strong>
+            Схема из геометрических фигур: <em>овал</em> — начало и конец, <em>прямоугольник</em> — действие, <em>ромб</em> — выбор (условие).
+          </div>
+          <div class="info-box">
+            <strong>3. Программный</strong>
+            Запись на специальном языке программирования, понятном компьютеру (Python, Scratch, КуМир).
+          </div>
+        </div>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Тренажёр: Исполнитель «Вычислитель»</div>
+          <p style="font-size: 0.92rem;">У исполнителя <strong>«Вычислитель»</strong> есть всего две команды, которым присвоены номера:<br />
+          <strong>Команда 1:</strong> <code>прибавь 2</code> &nbsp;|&nbsp; <strong>Команда 2:</strong> <code>умножь на 3</code></p>
+          <p style="font-size: 0.92rem;"><strong>Задание:</strong> получи из числа <strong>2</strong> число <strong>14</strong>, выполнив <strong>ровно 3 команды</strong>! Нажимай на кнопки команд ниже:</p>
+
+          <div class="calc-exec-display">
+            <div style="font-size: 0.85rem; color: #94a3b8;">Текущее число на экране Вычислителя:</div>
+            <div id="calcCurrentVal" style="font-size: 2rem; font-weight: 800; margin: 4px 0;">2</div>
+            <div id="calcHistory" style="font-size: 0.9rem; color: #38bdf8;">Записанная программа: (пусто)</div>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+            <button class="btn btn-sm" onclick="execCalcCmd(1)">Команда 1 (+ 2)</button>
+            <button class="btn btn-sm" onclick="execCalcCmd(2)">Команда 2 (× 3)</button>
+            <button class="btn btn-sm btn-secondary" onclick="resetCalcExec()">⟲ Сбросить</button>
+          </div>
+          <div class="feedback" id="m4Feedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(3)">← Назад</button>
+          <button class="btn" onclick="goToStep(5)">Перейти к итоговому тесту →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 5: ИТОГОВЫЙ ТЕСТ -->
+    <section class="module" id="step-5">
+      <div class="card">
+        <span class="time-tag">Модуль 5 • Рекомендуемое время: 6 минут</span>
+        <h2>5. Итоговый контроль знаний</h2>
+        <p>Ответь на 8 вопросов по всем темам урока. После проверки сформируется именная карточка с оценкой.</p>
+
+        <div id="finalQuizContainer"></div>
+
+        <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="finishLesson()">Завершить урок и получить оценку</button>
+
+        <div id="certificateSection" style="display: none;">
+          <div class="cert-box">
+            <div style="font-size: 0.88rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700;">
+              Карточка прохождения урока • Информатика 5 класс
+            </div>
+            <h2 id="certStudentName" style="margin: 8px 0; color: var(--text);">Ученик 5 класса</h2>
+            <p style="margin-bottom: 4px;">Тема: «Понятие алгоритма. Исполнители алгоритмов. СКИ»</p>
+            <div class="cert-grade" id="certGradeText">Оценка: 5 (Отлично)</div>
+            <p id="certStats" style="font-weight: 600;"></p>
+            <p id="certCode" style="font-family: monospace; font-size: 0.9rem; color: var(--text-muted);"></p>
+            <div class="callout success" style="text-align: left; margin-top: 12px;">
+              Сделай скриншот этой карточки и отправь учителю для выставления оценки в журнал!
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(4)">← Вернуться к теории</button>
+          <button class="btn btn-secondary btn-sm" onclick="resetAll()">Пройти заново</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // --- СОСТОЯНИЕ ---
+    const state = {
+      currentStep: 0,
+      completedSteps: [false, false, false, false, false, false],
+      secondsElapsed: 0,
+      studentName: "",
+      m1aDone: false,
+      m1bDone: false
+    };
+
+    // --- ТАЙМЕР ---
+    setInterval(() => {
+      state.secondsElapsed++;
+      const m = String(Math.floor(state.secondsElapsed / 60)).padStart(2, "0");
+      const s = String(state.secondsElapsed % 60).padStart(2, "0");
+      document.getElementById("timerDisplay").textContent = `Время урока: ${m}:${s} / 45:00`;
+    }, 1000);
+
+    // --- НАВИГАЦИЯ ---
+    function goToStep(idx) {
+      document.querySelectorAll(".module").forEach((el, i) => el.classList.toggle("active", idx === i));
+      document.querySelectorAll(".nav-pill").forEach((pill, i) => {
+        pill.classList.toggle("active", idx === i);
+        pill.classList.toggle("done", state.completedSteps[i]);
+      });
+      state.currentStep = idx;
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function markStepDone(idx) {
+      state.completedSteps[idx] = true;
+      const pills = document.querySelectorAll(".nav-pill");
+      if (pills[idx]) pills[idx].classList.add("done");
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const done = state.completedSteps.filter(Boolean).length;
+      const pct = Math.min(100, Math.round((done / 5) * 100));
+      document.getElementById("progressBar").style.width = `${pct}%`;
+    }
+
+    function startLesson() {
+      const val = document.getElementById("studentNameInput").value.trim();
+      state.studentName = val || "Ученик 5 класса";
+      markStepDone(0);
+      goToStep(1);
+    }
+
+    // --- МОДУЛЬ 1: АЛГОРИТМ ИЛИ НЕТ + ПОРЯДОК ШАГОВ ---
+    const m1SortData = [
+      { text: "Кулинарный рецепт приготовления шарлотки с точным весом продуктов и временем выпечки", answer: "Алгоритм" },
+      { text: "Совет «Посоли суп по вкусу и повари немного»", answer: "Не алгоритм (нет точности)" },
+      { text: "Правило сложения двух обыкновенных дробей с одинаковыми знаменателями", answer: "Алгоритм" },
+      { text: "Команда «Называй все натуральные числа по порядку без остановки»", answer: "Не алгоритм (нет конечности)" }
+    ];
+    const m1SortUser = {};
+
+    function renderM1Sort() {
+      const box = document.getElementById("m1SortContainer");
+      box.innerHTML = "";
+      const opts = ["Алгоритм", "Не алгоритм (нет точности)", "Не алгоритм (нет конечности)"];
+      m1SortData.forEach((item, idx) => {
+        const div = document.createElement("div");
+        div.className = "sort-item";
+        div.innerHTML = `
+          <div class="sort-item-text"><strong>${idx + 1}.</strong> ${item.text}</div>
+          <div class="sort-buttons" id="m1s-btns-${idx}">
+            ${opts.map(o => `<button class="choice-btn" onclick="selM1Sort(${idx}, '${o}', this)">${o}</button>`).join("")}
+          </div>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    function selM1Sort(idx, opt, btn) {
+      m1SortUser[idx] = opt;
+      document.getElementById(`m1s-btns-${idx}`).querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected", "correct", "wrong"));
+      btn.classList.add("selected");
+    }
+
+    function checkM1Sort() {
+      let ok = 0;
+      m1SortData.forEach((item, idx) => {
+        const chosen = m1SortUser[idx];
+        document.getElementById(`m1s-btns-${idx}`).querySelectorAll(".choice-btn").forEach(b => {
+          b.classList.remove("selected", "correct", "wrong");
+          if (b.textContent === chosen) {
+            if (chosen === item.answer) { b.classList.add("correct"); ok++; }
+            else { b.classList.add("wrong"); }
+          }
+        });
+      });
+      const fb = document.getElementById("m1SortFeedback");
+      if (ok === m1SortData.length) {
+        state.m1aDone = true;
+        fb.style.color = "var(--success)";
+        fb.textContent = "Верно! Ты отлично различаешь алгоритмы и неточные инструкции.";
+        if (state.m1aDone && state.m1bDone) markStepDone(1);
+      } else {
+        fb.style.color = "var(--warning)";
+        fb.textContent = `Правильно: ${ok} из ${m1SortData.length}. Проверь выделенные красным пункты.`;
+      }
+    }
+    renderM1Sort();
+
+    // Задание 1.2: Порядок шагов
+    const m1Steps = [
+      { id: "st1", label: "Подойти к пешеходному переходу и остановиться у края тротуара" },
+      { id: "st2", label: "Дождаться зелёного сигнала пешеходного светофора" },
+      { id: "st3", label: "Посмотреть налево и направо, убедиться, что машины остановились" },
+      { id: "st4", label: "Спокойно перейти дорогу по пешеходному переходу" }
+    ];
+    const m1CorrectOrder = ["st1", "st2", "st3", "st4"];
+    let m1UserOrder = [];
+
+    function initM1Order() {
+      const pool = document.getElementById("m1OrderPool");
+      pool.innerHTML = "";
+      const shuffled = [...m1Steps].sort(() => Math.random() - 0.5);
+      shuffled.forEach(item => {
+        pool.innerHTML += `<button class="order-chip" id="m1chip-${item.id}" onclick="pickM1Step('${item.id}', '${item.label}')">${item.label}</button>`;
+      });
+    }
+
+    function pickM1Step(id, label) {
+      if (m1UserOrder.length >= 4 || m1UserOrder.includes(id)) return;
+      m1UserOrder.push(id);
+      document.getElementById(`m1chip-${id}`).style.display = "none";
+      const idx = m1UserOrder.length - 1;
+      const slot = document.getElementById(`m1-slot-${idx}`);
+      slot.classList.add("filled");
+      slot.textContent = `Шаг ${idx + 1}: ${label}`;
+    }
+
+    function resetM1Order() {
+      m1UserOrder = [];
+      document.querySelectorAll("#m1OrderPool .order-chip").forEach(c => c.style.display = "inline-block");
+      for (let i = 0; i < 4; i++) {
+        const slot = document.getElementById(`m1-slot-${i}`);
+        slot.classList.remove("filled");
+        slot.style.borderColor = "";
+        slot.textContent = `Шаг ${i + 1}: ...`;
+      }
+      document.getElementById("m1OrderFeedback").textContent = "";
+    }
+
+    function checkM1Order() {
+      if (m1UserOrder.length < 4) {
+        document.getElementById("m1OrderFeedback").style.color = "var(--warning)";
+        document.getElementById("m1OrderFeedback").textContent = "Сначала выбери все 4 шага!";
+        return;
+      }
+      let ok = 0;
+      for (let i = 0; i < 4; i++) {
+        const slot = document.getElementById(`m1-slot-${i}`);
+        if (m1UserOrder[i] === m1CorrectOrder[i]) {
+          slot.style.borderColor = "var(--success)";
+          ok++;
+        } else {
+          slot.style.borderColor = "var(--danger)";
+        }
+      }
+      const fb = document.getElementById("m1OrderFeedback");
+      if (ok === 4) {
+        state.m1bDone = true;
+        fb.style.color = "var(--success)";
+        fb.textContent = "Отлично! Безопасный алгоритм составлен в верном порядке.";
+        if (state.m1aDone && state.m1bDone) markStepDone(1);
+      } else {
+        fb.style.color = "var(--danger)";
+        fb.textContent = "Есть ошибки (красные рамки). Нажми «Сбросить» и попробуй снова.";
+      }
+    }
+    initM1Order();
+
+    // --- МОДУЛЬ 2: ФОРМАЛЬНЫЙ И НЕФОРМАЛЬНЫЙ ИСПОЛНИТЕЛЬ ---
+    const m2Data = [
+      { text: "Робот-пылесос, убирающий комнату по заложенной программе", answer: "Формальный исполнитель" },
+      { text: "Ученик 5 класса, решающий задачу у доски", answer: "Неформальный исполнитель" },
+      { text: "Автоматическая стиральная машина", answer: "Формальный исполнитель" },
+      { text: "Дрессированная собака, выполняющая команды хозяина", answer: "Неформальный исполнитель" },
+      { text: "Компьютер, запускающий текстовый редактор", answer: "Формальный исполнитель" }
+    ];
+    const m2User = {};
+
+    function renderM2() {
+      const box = document.getElementById("m2Container");
+      box.innerHTML = "";
+      const opts = ["Формальный исполнитель", "Неформальный исполнитель"];
+      m2Data.forEach((item, idx) => {
+        const div = document.createElement("div");
+        div.className = "sort-item";
+        div.innerHTML = `
+          <div class="sort-item-text"><strong>${idx + 1}.</strong> ${item.text}</div>
+          <div class="sort-buttons" id="m2-btns-${idx}">
+            ${opts.map(o => `<button class="choice-btn" onclick="selM2(${idx}, '${o}', this)">${o}</button>`).join("")}
+          </div>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    function selM2(idx, opt, btn) {
+      m2User[idx] = opt;
+      document.getElementById(`m2-btns-${idx}`).querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected", "correct", "wrong"));
+      btn.classList.add("selected");
+    }
+
+    function checkM2() {
+      let ok = 0;
+      m2Data.forEach((item, idx) => {
+        const chosen = m2User[idx];
+        document.getElementById(`m2-btns-${idx}`).querySelectorAll(".choice-btn").forEach(b => {
+          b.classList.remove("selected", "correct", "wrong");
+          if (b.textContent === chosen) {
+            if (chosen === item.answer) { b.classList.add("correct"); ok++; }
+            else { b.classList.add("wrong"); }
+          }
+        });
+      });
+      const fb = document.getElementById("m2Feedback");
+      if (ok === m2Data.length) {
+        fb.style.color = "var(--success)";
+        fb.textContent = "Превосходно! Все 5 исполнителей определены правильно.";
+        markStepDone(2);
+      } else {
+        fb.style.color = "var(--warning)";
+        fb.textContent = `Правильно: ${ok} из ${m2Data.length}. Проверь выделенные красным пункты.`;
+      }
+    }
+    renderM2();
+
+    // --- МОДУЛЬ 3: СИМУЛЯТОР РОБОТА НА ПОЛЕ 5x5 ---
+    const robotConfig = {
+      start: { r: 0, c: 0 },
+      finish: { r: 4, c: 3 },
+      walls: ["1,1", "1,2", "3,1", "3,2"],
+      crystalsInit: ["0,2", "2,3"]
+    };
+
+    let robotSim = {
+      r: 0,
+      c: 0,
+      collected: [],
+      commands: [],
+      running: false,
+      timerId: null
+    };
+
+    function renderRobotGrid() {
+      const cell = 52;
+      const pad = 10;
+      const size = cell * 5 + pad * 2;
+      let svg = `<svg viewBox="0 0 ${size} ${size}">`;
+
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+          const x = pad + c * cell;
+          const y = pad + r * cell;
+          const key = `${r},${c}`;
+          const isWall = robotConfig.walls.includes(key);
+          const isFinish = (r === robotConfig.finish.r && c === robotConfig.finish.c);
+
+          let fill = "#f8fafc";
+          if (isWall) fill = "#cbd5e1";
+          else if (isFinish) fill = "#d1fae5";
+
+          svg += `<rect x="${x}" y="${y}" width="${cell}" height="${cell}" fill="${fill}" stroke="#94a3b8" stroke-width="1.5" />`;
+
+          if (isWall) {
+            svg += `<text x="${x + cell/2}" y="${y + 33}" font-size="24" text-anchor="middle">🧱</text>`;
+          } else if (isFinish) {
+            svg += `<text x="${x + cell/2}" y="${y + 33}" font-size="24" text-anchor="middle">🏁</text>`;
+          }
+
+          if (robotConfig.crystalsInit.includes(key) && !robotSim.collected.includes(key)) {
+            svg += `<text x="${x + cell/2}" y="${y + 33}" font-size="22" text-anchor="middle">💎</text>`;
+          }
+        }
+      }
+
+      // Робот
+      const rx = pad + robotSim.c * cell + cell / 2;
+      const ry = pad + robotSim.r * cell + cell / 2;
+      svg += `
+        <circle cx="${rx}" cy="${ry}" r="18" fill="#2563eb" stroke="#1e3a8a" stroke-width="2.5" />
+        <text x="${rx}" y="${ry + 7}" font-size="20" text-anchor="middle">🤖</text>
+      `;
+
+      svg += `</svg>`;
+      document.getElementById("robotGridSvg").innerHTML = svg;
+    }
+
+    function updateProgramQueueUI(activeIdx = -1) {
+      document.getElementById("cmdCount").textContent = robotSim.commands.length;
+      const box = document.getElementById("programQueueBox");
+      if (robotSim.commands.length === 0) {
+        box.textContent = "Нажимай на кнопки пульта выше...";
+        return;
+      }
+      box.innerHTML = robotSim.commands.map((cmd, idx) => {
+        if (idx === activeIdx) {
+          return `<span style="background:#f59e0b; color:#0f172a; padding:1px 5px; border-radius:4px; font-weight:bold;">${idx + 1}.${cmd}</span>`;
+        }
+        return `${idx + 1}.${cmd}`;
+      }).join(" → ");
+    }
+
+    function addRobotCmd(cmd) {
+      if (robotSim.running) return;
+      if (robotSim.commands.length >= 16) {
+        document.getElementById("robotFeedback").style.color = "var(--warning)";
+        document.getElementById("robotFeedback").textContent = "Достигнут предел в 16 команд!";
+        return;
+      }
+      robotSim.commands.push(cmd);
+      updateProgramQueueUI();
+    }
+
+    function popRobotCmd() {
+      if (robotSim.running) return;
+      robotSim.commands.pop();
+      updateProgramQueueUI();
+    }
+
+    function resetRobotSim() {
+      if (robotSim.timerId) clearInterval(robotSim.timerId);
+      robotSim = {
+        r: robotConfig.start.r,
+        c: robotConfig.start.c,
+        collected: [],
+        commands: [],
+        running: false,
+        timerId: null
+      };
+      document.getElementById("robotFeedback").textContent = "";
+      updateProgramQueueUI();
+      renderRobotGrid();
+    }
+
+    function runRobotProgram() {
+      if (robotSim.running) return;
+      if (robotSim.commands.length === 0) {
+        document.getElementById("robotFeedback").style.color = "var(--warning)";
+        document.getElementById("robotFeedback").textContent = "Сначала добавь команды в программу Робота!";
+        return;
+      }
+
+      // Сброс позиции перед запуском, сохраняя список команд
+      robotSim.r = robotConfig.start.r;
+      robotSim.c = robotConfig.start.c;
+      robotSim.collected = [];
+      robotSim.running = true;
+      renderRobotGrid();
+
+      const fb = document.getElementById("robotFeedback");
+      fb.style.color = "var(--primary-dark)";
+      fb.textContent = "Выполнение программы...";
+
+      let step = 0;
+      robotSim.timerId = setInterval(() => {
+        if (step >= robotSim.commands.length) {
+          clearInterval(robotSim.timerId);
+          robotSim.running = false;
+          updateProgramQueueUI(-1);
+
+          const atFinish = (robotSim.r === robotConfig.finish.r && robotSim.c === robotConfig.finish.c);
+          const allCrystals = robotSim.collected.length === robotConfig.crystalsInit.length;
+
+          if (atFinish && allCrystals) {
+            fb.style.color = "var(--success)";
+            fb.textContent = "Победа! Робот собрал оба кристалла и прибыл на финиш!";
+            markStepDone(3);
+          } else if (!allCrystals) {
+            fb.style.color = "var(--warning)";
+            fb.textContent = `Программа завершена, но собрано кристаллов: ${robotSim.collected.length} из 2 (не забудь команду «ВЗЯТЬ» на клетке с кристаллом!).`;
+          } else {
+            fb.style.color = "var(--warning)";
+            fb.textContent = "Кристаллы собраны, но Робот не дошёл до зелёного финиша (🏁)!";
+          }
+          return;
+        }
+
+        const cmd = robotSim.commands[step];
+        updateProgramQueueUI(step);
+
+        let nr = robotSim.r;
+        let nc = robotSim.c;
+
+        if (cmd === "ВВЕРХ") nr--;
+        else if (cmd === "ВНИЗ") nr++;
+        else if (cmd === "ВЛЕВО") nc--;
+        else if (cmd === "ВПРАВО") nc++;
+        else if (cmd === "ВЗЯТЬ") {
+          const key = `${robotSim.r},${robotSim.c}`;
+          if (robotConfig.crystalsInit.includes(key) && !robotSim.collected.includes(key)) {
+            robotSim.collected.push(key);
+          }
+        }
+
+        // Проверка выхода за границы или столкновения со стеной
+        if (nr < 0 || nr > 4 || nc < 0 || nc > 4 || robotConfig.walls.includes(`${nr},${nc}`)) {
+          clearInterval(robotSim.timerId);
+          robotSim.running = false;
+          fb.style.color = "var(--danger)";
+          fb.textContent = `Отказ исполнителя на шаге ${step + 1} («${cmd}»): путь преграждён стеной или краем поля!`;
+          return;
+        }
+
+        robotSim.r = nr;
+        robotSim.c = nc;
+        renderRobotGrid();
+        step++;
+      }, 360);
+    }
+    renderRobotGrid();
+
+    // --- МОДУЛЬ 4: ИСПОЛНИТЕЛЬ ВЫЧИСЛИТЕЛЬ ---
+    let calcVal = 2;
+    let calcSeq = [];
+
+    function execCalcCmd(cmd) {
+      if (calcSeq.length >= 3) return;
+      if (cmd === 1) calcVal += 2;
+      else if (cmd === 2) calcVal *= 3;
+      calcSeq.push(cmd);
+
+      document.getElementById("calcCurrentVal").textContent = calcVal;
+      document.getElementById("calcHistory").textContent = `Записанная программа: ${calcSeq.join(" → ")} (${calcSeq.length} из 3 команд)`;
+
+      const fb = document.getElementById("m4Feedback");
+      if (calcSeq.length === 3) {
+        if (calcVal === 14) {
+          fb.style.color = "var(--success)";
+          fb.textContent = "Верно! Программа 1 2 1 (2 + 2 = 4 → 4 × 3 = 12 → 12 + 2 = 14) даёт число 14!";
+          markStepDone(4);
+        } else {
+          fb.style.color = "var(--danger)";
+          fb.textContent = `Получилось число ${calcVal}, а нужно 14. Нажми «Сбросить» и попробуй другую комбинацию из 3 команд!`;
+        }
+      }
+    }
+
+    function resetCalcExec() {
+      calcVal = 2;
+      calcSeq = [];
+      document.getElementById("calcCurrentVal").textContent = "2";
+      document.getElementById("calcHistory").textContent = "Записанная программа: (пусто)";
+      document.getElementById("m4Feedback").textContent = "";
+    }
+
+    // --- МОДУЛЬ 5: ИТОГОВЫЙ ТЕСТ ---
+    const quizData = [
+      {
+        q: "1. Что такое алгоритм?",
+        options: [
+          "Любой текст, набранный на компьютере",
+          "Конечная последовательность точных и понятных команд, приводящая к решению задачи",
+          "Бесконечный набор случайных действий"
+        ],
+        correct: 1
+      },
+      {
+        q: "2. Какое свойство алгоритма означает, что каждая команда должна пониматься однозначно?",
+        options: ["Точность (определённость)", "Массовость", "Музыкальность"],
+        correct: 0
+      },
+      {
+        q: "3. Кто из перечисленных является ФОРМАЛЬНЫМ исполнителем?",
+        options: ["Ученик на уроке", "Компьютер", "Художник"],
+        correct: 1
+      },
+      {
+        q: "4. Что такое система команд исполнителя (СКИ)?",
+        options: [
+          "Все команды, которые исполнитель понимает и умеет выполнять",
+          "Список всех программ в интернете",
+          "Инструкция по сборке компьютера"
+        ],
+        correct: 0
+      },
+      {
+        q: "5. Что произойдёт, если дать формальному исполнителю команду, которой нет в его СКИ?",
+        options: [
+          "Исполнитель сам придумает, что делать",
+          "Исполнитель откажется выполнять команду и выдаст сообщение об ошибке",
+          "Команда выполнится дважды"
+        ],
+        correct: 1
+      },
+      {
+        q: "6. Как называется графический способ записи алгоритма с помощью геометрических фигур (овалов, прямоугольников, ромбов)?",
+        options: ["Блок-схема", "Фотография", "Диаграмма"],
+        correct: 0
+      },
+      {
+        q: "7. У исполнителя «Удвоитель» есть две команды: 1 — прибавь 1; 2 — умножь на 2. Какое число получится из числа 3 после выполнения программы 1 2 1?",
+        options: ["7", "9", "14"],
+        correct: 1
+      },
+      {
+        q: "8. В честь какого учёного получил своё название термин «алгоритм»?",
+        options: ["Мухаммеда аль-Хорезми", "Исаака Ньютона", "Александра Пушкина"],
+        correct: 0
+      }
+    ];
+    const quizAnswers = {};
+
+    function renderQuiz() {
+      const box = document.getElementById("finalQuizContainer");
+      box.innerHTML = "";
+      quizData.forEach((item, qIdx) => {
+        const div = document.createElement("div");
+        div.className = "quiz-q";
+        div.innerHTML = `
+          <div><strong>${item.q}</strong></div>
+          <div id="quiz-opts-${qIdx}">
+            ${item.options.map((opt, oIdx) => `
+              <button class="quiz-opt" onclick="selectQuiz(${qIdx}, ${oIdx}, this)">${opt}</button>
+            `).join("")}
+          </div>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    function selectQuiz(qIdx, oIdx, btn) {
+      quizAnswers[qIdx] = oIdx;
+      const box = document.getElementById(`quiz-opts-${qIdx}`);
+      box.querySelectorAll(".quiz-opt").forEach(b => b.classList.remove("selected", "correct", "wrong"));
+      btn.classList.add("selected");
+    }
+
+    function finishLesson() {
+      if (Object.keys(quizAnswers).length < quizData.length) {
+        alert("Ответь на все 8 вопросов теста перед завершением урока!");
+        return;
+      }
+
+      let score = 0;
+      quizData.forEach((item, qIdx) => {
+        const chosen = quizAnswers[qIdx];
+        const box = document.getElementById(`quiz-opts-${qIdx}`);
+        box.querySelectorAll(".quiz-opt").forEach((b, oIdx) => {
+          b.classList.remove("selected", "correct", "wrong");
+          if (oIdx === item.correct) b.classList.add("correct");
+          else if (oIdx === chosen && chosen !== item.correct) b.classList.add("wrong");
+        });
+        if (chosen === item.correct) score++;
+      });
+
+      let grade = 2;
+      let label = "Нужно повторить тему";
+      if (score >= 7) { grade = 5; label = "Отлично"; }
+      else if (score >= 5) { grade = 4; label = "Хорошо"; }
+      else if (score >= 4) { grade = 3; label = "Удовлетворительно"; }
+
+      markStepDone(5);
+      const mins = Math.max(1, Math.round(state.secondsElapsed / 60));
+      const d = new Date();
+      const code = `INF5-ALG-${score}${grade}-${d.getDate()}${d.getMonth() + 1}`;
+
+      document.getElementById("certStudentName").textContent = state.studentName || "Ученик 5 класса";
+      document.getElementById("certGradeText").textContent = `Оценка: ${grade} (${label})`;
+      document.getElementById("certStats").textContent = `Правильных ответов: ${score} из ${quizData.length} • Время работы: ~${mins} мин.`;
+      document.getElementById("certCode").textContent = `Код проверки: ${code}`;
+      document.getElementById("certificateSection").style.display = "block";
+      document.getElementById("certificateSection").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function resetAll() {
+      if (confirm("Сбросить прогресс и пройти урок заново?")) {
+        location.reload();
+      }
+    }
+
+    renderQuiz();
+  </script>
+</body>
+</html>
